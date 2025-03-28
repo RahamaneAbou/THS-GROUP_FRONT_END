@@ -1,0 +1,56 @@
+<template>
+  <div class="carousel-container">
+    <swiper
+      class="my-swiper"
+      :slides-per-view="1"
+      :space-between="20"
+      :loop="true"
+      :autoplay="{ delay: 3000, disableOnInteraction: false }"
+      :pagination="{ clickable: true }"
+      :navigation="true"
+    >
+      <swiper-slide v-for="(image, index) in images" :key="index">
+        <img :src="image" alt="Slide image" class="carousel-image" />
+      </swiper-slide>
+    </swiper>
+  </div>
+</template>
+
+
+script>
+import { Swiper, SwiperSlide } from "swiper/vue"; // Importation de Swiper
+import "swiper/swiper-bundle.css"; // Importation des styles Swiper
+
+export default {
+  name: "ImageCarousel",
+  components: { Swiper, SwiperSlide },
+  data() {
+    return {
+      images: [
+        require("@/assets/logo.jpg"),
+        require("@/assets/img_3.jpg"),
+        require("@/assets/img_4.jpg"),
+        require("@/assets/img_5.jpg"),
+        require("@/assets/img_6.jpg"),
+      ],
+    };
+  },
+};
+</script>
+
+
+
+<style scoped>
+.carousel-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.carousel-image {
+  width: 100%;
+  border-radius: 10px;
+  height: auto;
+}
+</style>

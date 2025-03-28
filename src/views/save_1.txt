@@ -1,0 +1,298 @@
+<template>
+  <div>
+    <!-- Conteneur principal -->
+    <div class="student-dashboard" v-if="isDataLoaded">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <h1>Bienvenue, {{ studentName }} !</h1>
+        <p>Numéro matricule : {{ numMatricule }}</p>
+      </header>
+
+      <!-- Contenu principal -->
+      <main class="dashboard-content">
+        <!-- Section 1 : Résumé académique -->
+        <section class="academic-summary">
+          <h2>Résumé académique</h2>
+          <div class="summary-box">
+            <div class="info-box">
+              <span class="label">Formation :</span>
+              <span class="value">{{ formation.nom || "Non disponible" }}</span>
+            </div>
+            <div class="info-box">
+              <span class="label">Niveau actuel :</span>
+              <span class="value">{{ currentLevel || "Non disponible" }}</span>
+            </div>
+            <div class="info-box">
+              <span class="label">Moyenne générale :</span>
+              <span class="value">{{ averageGrade.toFixed(2) || "Non disponible" }} / 20</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 : Cours inscrits -->
+        <section class="enrolled-courses">
+          <h2>Cours inscrits</h2>
+          <table v-if="courses.length > 0">
+            <thead>
+              <tr>
+                <th>Titre du cours</th>
+                <th>Enseignant</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="course in courses" :key="course.id">
+                <td>{{ course.nom }}</td>
+                <td>{{ getEnseignantNameFromCache(course.enseignantId) || "Non disponible" }}</td>
+                <td>{{ course.note ? course.note.valeur : "Non disponible" }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-else>Aucun cours inscrit pour le moment.</p>
+        </section>
+      </main>
+    </div>
+
+    <!-- Message de chargement -->
+    <div class="loading-message" v-else>
+      <p>Chargement des données...</p>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import Cookies from "js-cookie"; // Pour gérer les cookies
+
+export default {
+  name: "StudentDashboard",
+  data() {
+    return {
+      numMatricule: "", // Numéro matricule de l'étudiant
+      studentName: "", // Nom complet de l'étudiant
+      formation: {}, // Formation de l'étudiant
+      currentLevel: "", // Niveau actuel de l'étudiant
+      courses: [], // Liste des cours inscrits par l'étudiant
+      averageGrade: 0, // Moyenne générale de l'étudiant
+      isDataLoaded: false, // Indicateur de chargement des données
+      baseURL: "http://localhost:8080/THS-GROUP", // URL de base de l'API
+      enseignantsCache: {}, // Cache pour stocker les enseignants déjà récupérés
+    };
+  },
+  async created() {
+    try {
+      // Récupérer l'ID et le numéro matricule depuis les cookies
+      const userId = Cookies.get("userId");
+      this.numMatricule = Cookies.get("userMatricule");
+
+      if (!userId || !this.numMatricule) {
+        throw new Error("Données d'utilisateur non trouvées dans les cookies.");
+      }
+
+      // Récupérer les informations de l'étudiant via l'API
+      const studentResponse = await axios.get(`${this.baseURL}/etudiants/${userId}`);
+      const student = studentResponse.data;
+
+      this.studentName = `${student.prenom} ${student.nom}`;
+      this.currentLevel = "Premier année"; // Supposons que l'étudiant a un champ "niveauActuel"
+      this.formation = student.formation; // Supposons que l'étudiant a un champ "formation"
+
+      // Récupérer les notes de l'étudiant via l'API
+      const notesResponse = await axios.get(`${this.baseURL}/notes/etudiant/${userId}`);
+      const notes = notesResponse.data;
+
+      // Calculer la moyenne générale
+      
+      this.averageGrade = this.calculateAverageGrade(notes);
+
+      // Récupérer tous les cours de la formation de l'étudiant
+     
+      const coursesResponse = await axios.get(
+        `${this.baseURL}/cours/formation/${this.formation.id}`
+      );
+      const allCourses = coursesResponse.data;
+
+      // Précharger les enseignants associés aux cours
+     
+      await this.preloadEnseignants(allCourses);
+
+      // Ajouter les notes correspondantes aux cours
+      this.courses = allCourses.map((course) => {
+        const note = notes.find((n) => n.cours.id === course.id);
+        return {
+          ...course,
+          note: note || null, // Associer la note au cours ou mettre null si aucune note
+          enseignantId: course.enseignant?.id || null, // Stocker l'ID de l'enseignant
+        };
+      });
+
+      // Marquer les données comme chargées
+      this.isDataLoaded = true;
+    } catch (error) {
+      console.error("Erreur lors du chargement des données :", error);
+      Swal.fire({
+        title: "ERREUR",
+        text: "Impossible de charger vos données. Veuillez réessayer.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  },
+  methods: {
+    // Calculer la moyenne générale de l'étudiant
+    calculateAverageGrade(notes) {
+      if (!notes || notes.length === 0) {
+        return 0;
+      }
+      const total = notes.reduce((sum, note) => sum + (note.valeur || 0), 0);
+      return total / notes.length;
+    },
+
+    // Récupérer le nom de l'enseignant depuis le cache
+    getEnseignantNameFromCache(enseignantId) {
+          return this.enseignantsCache[enseignantId]?.nom || "Non disponible";
+    },
+
+    // Précharger les enseignants associés aux cours
+    async preloadEnseignants(courses) {
+      alert('bonjou')
+      const enseignantIds = courses
+        .filter((course) => course.enseignant?.id)
+        .map((course) => course.enseignant.id);
+
+      // Éliminer les doublons d'IDs
+      const uniqueEnseignantIds = [...new Set(enseignantIds)];
+
+      if (uniqueEnseignantIds.length === 0) return;
+
+      try {
+        // Récupérer les enseignants en une seule requête POST
+        const response = await axios.POST(
+          `${this.baseURL}/enseignants/getByIds`,
+          { ids: uniqueEnseignantIds }
+        );
+
+        // Stocker les enseignants dans le cache
+        response.data.forEach((enseignant) => {
+          this.enseignantsCache[enseignant.id] = enseignant;
+        });
+      } catch (error) {
+        console.error("Erreur lors de la récupération des enseignants :", error);
+      }
+    },
+  },
+};
+</script>
+
+
+<style scoped>
+.student-dashboard {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 20px;
+}
+
+/* Header */
+.dashboard-header {
+  background-color: #003366; /* Bleu foncé */
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.dashboard-header p {
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+/* Contenu principal */
+.dashboard-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Section : Résumé académique */
+.academic-summary {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.academic-summary h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+
+.summary-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffcc00; /* Jaune */
+  border-radius: 5px;
+}
+
+.info-box .label {
+  font-weight: bold;
+  color: #333;
+}
+
+.info-box .value {
+  color: #003366;
+}
+
+/* Section : Cours inscrits */
+.enrolled-courses {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.enrolled-courses h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+
+.enrolled-courses table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.enrolled-courses th,
+.enrolled-courses td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.enrolled-courses th {
+  background-color: #003366;
+  color: white;
+}
+
+/* Message de chargement */
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #ffcc00; /* Jaune */
+}
+</style>

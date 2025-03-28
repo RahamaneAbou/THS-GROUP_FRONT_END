@@ -1,0 +1,337 @@
+<template>
+  <div>
+    <!-- Conteneur principal -->
+    <div class="teacher-dashboard" v-if="isDataLoaded">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <h1>Bienvenue, {{ teacherName }} !</h1>
+        <p>Numéro Matricule : {{ teacherMatricule }}</p>
+      </header>
+
+      <!-- Contenu principal -->
+      <main class="dashboard-content">
+        <!-- Section 1 : Résumé professionnel -->
+        <section class="professional-summary">
+          <h2>Résumé Professionnel</h2>
+          <div class="summary-box">
+            <div class="info-box">
+              <span class="label">Spécialité :</span>
+              <span class="value">{{ teacherSpecialty || "Non disponible" }}</span>
+            </div>
+            <div class="info-box">
+              <span class="label">Formations enseignées :</span>
+              <span class="value">{{ formationCount || "Aucune" }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 : Liste des formations -->
+        <section class="formations-list">
+          <h2>Formations où vous intervenez</h2>
+          <ul v-if="formations.length > 0">
+            <li v-for="formation in formations" :key="formation.id" @click="selectFormation(formation)">
+              {{ formation.nom }}
+            </li>
+          </ul>
+          <p v-else>Aucune formation attribuée pour le moment.</p>
+        </section>
+
+        <!-- Section 3 : Liste des cours pour la formation sélectionnée -->
+        <section class="courses-list" v-if="selectedFormation">
+          <h2>Cours de la formation : {{ selectedFormation.nom }}</h2>
+          <ul v-if="courses.length > 0">
+            <li v-for="course in courses" :key="course.id" @click="selectCourse(course)">
+              {{ course.nom }}
+            </li>
+          </ul>
+          <p v-else>Aucun cours trouvé pour cette formation.</p>
+        </section>
+
+        <!-- Section 4 : Liste des étudiants et notes pour le cours sélectionné -->
+        <section class="student-grades" v-if="selectedCourse">
+          <h2>Étudiants inscrits dans le cours : {{ selectedCourse.nom }}</h2>
+          <table v-if="students.length > 0">
+            <thead>
+              <tr>
+                <th>Nom de l'étudiant</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="student in students" :key="student.etudiant.id">
+                <td>{{ student.etudiant.prenom }} {{ student.etudiant.nom }}</td>
+                <td>{{ student.note.valeur || "Non disponible" }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-else>Aucun étudiant inscrit dans ce cours.</p>
+        </section>
+      </main>
+    </div>
+
+    <!-- Message de chargement -->
+    <div class="loading-message" v-else>
+      <p>Chargement des données...</p>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import Cookies from "js-cookie"; // Pour gérer les cookies
+
+export default {
+  name: "TeacherDashboard",
+  data() {
+    return {
+      teacherId: "", // ID de l'enseignant
+      teacherMatricule: "", // Numéro matricule de l'enseignant
+      teacherName: "", // Nom complet de l'enseignant
+      teacherSpecialty: "", // Spécialité de l'enseignant
+      formations: [], // Liste des formations où l'enseignant intervient
+      courses: [], // Liste des cours de la formation sélectionnée
+      students: [], // Liste des étudiants inscrits dans le cours sélectionné
+      selectedFormation: null, // Formation sélectionnée
+      selectedCourse: null, // Cours sélectionné
+      isDataLoaded: false, // Indicateur de chargement des données
+      baseURL: "http://localhost:8080/THS-GROUP", // URL de base de l'API
+    };
+  },
+  computed: {
+    // Calculer le nombre de formations enseignées
+    formationCount() {
+      return this.formations.length;
+    },
+  },
+ // Récupérer toutes les formations où l'enseignant intervient (via ses cours)
+async created() {
+    try {
+        // Récupérer l'ID et le numéro matricule depuis les cookies
+        const userId = Cookies.get("userId");
+        this.teacherMatricule = Cookies.get("userMatricule");
+        if (!userId || !this.teacherMatricule) {
+            throw new Error("Données d'utilisateur non trouvées dans les cookies.");
+        }
+
+        // Récupérer les informations de l'enseignant via l'API
+        const teacherResponse = await axios.get(`${this.baseURL}/enseignants/${userId}`);
+        const teacher = teacherResponse.data;
+        this.teacherName = `${teacher.prenom} ${teacher.nom}`;
+        this.teacherSpecialty = "THS GROUP";
+
+        // Récupérer tous les cours associés à cet enseignant
+        const coursesResponse = await axios.get(`${this.baseURL}/cours/getByEnseignantId/${userId}`);
+        const courses = coursesResponse.data;
+
+        // Extraire les IDs uniques des formations associées aux cours
+        const formationIds = [...new Set(courses.map((course) => course.formation.id))];
+
+        // Récupérer chaque formation via une boucle de requêtes GET
+        const formationPromises = formationIds.map(async (formationId) => {
+            const formationResponse = await axios.get(`${this.baseURL}/formations/${formationId}`);
+            return formationResponse.data;
+        });
+
+        // Attendre que toutes les requêtes soient terminées
+        this.formations = await Promise.all(formationPromises);
+
+        // Marquer les données comme chargées
+        this.isDataLoaded = true;
+    } catch (error) {
+        console.error("Erreur lors du chargement des données :", error);
+        alert("Une erreur s'est produite lors du chargement des données. Veuillez réessayer.");
+    }
+},
+  methods: {
+    // Sélectionner une formation pour afficher ses cours
+    async selectFormation(formation) {
+      this.selectedFormation = formation;
+      this.selectedCourse = null; // Réinitialiser le cours sélectionné
+      this.students = []; // Réinitialiser la liste des étudiants
+
+      try {
+        // Récupérer tous les cours de la formation sélectionnée
+        const coursesResponse = await axios.get(
+          `${this.baseURL}/cours/formation/${formation.id}`
+        );
+        this.courses = coursesResponse.data.filter(
+          (course) => course.enseignantId === parseInt(Cookies.get("userId"))
+        );
+      } catch (error) {
+        console.error("Erreur lors du chargement des cours :", error);
+        alert("Impossible de charger les cours pour cette formation.");
+      }
+    },
+
+    // Sélectionner un cours pour afficher les étudiants et leurs notes
+    async selectCourse(course) {
+      this.selectedCourse = course;
+      this.students = [];
+
+      try {
+        // Récupérer toutes les notes pour ce cours
+        const notesResponse = await axios.get(`${this.baseURL}/notes/cours/${course.id}`);
+        const notes = notesResponse.data;
+
+        // Ajouter les étudiants correspondants
+        this.students = notes.map((note) => ({
+          etudiant: note.etudiant,
+          note: note,
+        }));
+      } catch (error) {
+        console.error("Erreur lors du chargement des notes :", error);
+        alert("Impossible de charger les notes pour ce cours.");
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* Styles généraux */
+.teacher-dashboard {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 20px;
+}
+
+/* Header */
+.dashboard-header {
+  background-color: #003366; /* Bleu foncé */
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.dashboard-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+.dashboard-header p {
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+/* Section : Résumé professionnel */
+.professional-summary {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.professional-summary h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+.summary-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.info-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffcc00; /* Jaune */
+  border-radius: 5px;
+}
+.info-box .label {
+  font-weight: bold;
+  color: #333;
+}
+.info-box .value {
+  color: #003366;
+}
+
+/* Section : Liste des formations */
+.formations-list {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.formations-list h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+.formations-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+.formations-list li {
+  padding: 10px;
+  background-color: #ffcc00; /* Jaune */
+  border-radius: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.formations-list li:hover {
+  background-color: #e6b800; /* Jaune plus foncé au survol */
+}
+
+/* Section : Liste des cours */
+.courses-list {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.courses-list h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+.courses-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+.courses-list li {
+  padding: 10px;
+  background-color: #ffcc00; /* Jaune */
+  border-radius: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.courses-list li:hover {
+  background-color: #e6b800; /* Jaune plus foncé au survol */
+}
+
+/* Section : Liste des étudiants et notes */
+.student-grades {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.student-grades h2 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+.student-grades table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.student-grades th,
+.student-grades td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+.student-grades th {
+  background-color: #003366;
+  color: white;
+}
+
+/* Message de chargement */
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #ffcc00; /* Jaune */
+}
+</style>

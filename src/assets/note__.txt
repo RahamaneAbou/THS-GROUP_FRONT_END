@@ -1,0 +1,139 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Présentation de l'École</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div class="presentation">
+      <div class="school-info">
+        <h1>{{ schoolName }}</h1>
+        <p><strong>Devise :</strong> {{ motto }}</p>
+        <h3>Objectifs :</h3>
+        <ul>
+          <li v-for="objective in objectives" :key="objective">{{ objective }}</li>
+        </ul>
+        <p>{{ description }}</p>
+      </div>
+      <div class="image-carousel">
+        <img :src="currentImage" alt="Carousel image" class="carousel-image" />
+      </div>
+    </div>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>
+
+
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.presentation {
+  display: flex;
+  gap: 20px;
+  width: 80%;
+  max-width: 1200px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.school-info {
+  flex: 1;
+  padding: 20px;
+}
+
+.school-info h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #333;
+}
+
+.school-info p {
+  margin: 10px 0;
+  color: #555;
+}
+
+.school-info ul {
+  padding-left: 20px;
+}
+
+.school-info ul li {
+  margin: 5px 0;
+}
+
+.image-carousel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #222;
+  overflow: hidden;
+}
+
+.carousel-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+
+
+const app = Vue.createApp({
+  data() {
+    return {
+      schoolName: "École Supérieure de Développement et d'Innovation",
+      motto: "L'excellence au service de l'innovation",
+      objectives: [
+        "Former des leaders compétents",
+        "Encourager l'innovation technologique",
+        "Promouvoir l'excellence académique",
+        "Favoriser l'entrepreneuriat",
+        "Soutenir le développement durable",
+      ],
+      description:
+        "Notre école s'engage à offrir une formation de qualité en mettant l'accent sur l'innovation et le développement personnel. Nous préparons nos étudiants à relever les défis du monde moderne.",
+      images: [
+        "./images/image1.jpg",
+        "./images/image2.jpg",
+        "./images/image3.jpg",
+        "./images/image4.jpg",
+        "./images/image5.jpg",
+      ],
+      currentImageIndex: 0,
+    };
+  },
+  computed: {
+    currentImage() {
+      return this.images[this.currentImageIndex];
+    },
+  },
+  mounted() {
+    this.startCarousel();
+  },
+  methods: {
+    startCarousel() {
+      setInterval(() => {
+        this.currentImageIndex =
+          (this.currentImageIndex + 1) % this.images.length;
+      }, 3000); // Change d'image toutes les 3 secondes
+    },
+  },
+});
+
+app.mount("#app");
+
+
+

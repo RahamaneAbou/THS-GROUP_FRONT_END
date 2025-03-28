@@ -1,0 +1,85 @@
+<template>
+    <section>
+        <div>
+            <h1>Gestion de List</h1>
+
+            <h2>Liste des etudiant majeur</h2>
+            <ul>
+                <li v-for="etud in  etudiantMajeurs" :key="etud.nom"> {{ etud.nom }} ({{ etud.age }} ans)</li>
+
+            </ul>
+            <p v-if="etudiantMajeurs.length ===0"> Aucun Etudiant Majeur dans la liste.</p>
+            <h2>Liste de fruits</h2>
+            <label>
+                <input type="radio" value="rouge" v-model="typeFruits" />
+                Fruits Rouge
+            </label>
+            <label>
+                <input type="radio" value="jaune" v-model="typeFruits" />
+                Fruits jaune
+            </label>
+            <label>
+                <input type="radio" value="verts" v-model="typeFruits" />
+                Fruits verts
+            </label>
+
+            <ul>
+                <li v-for="fruit in fruitsFilters" :key="fruit"> {{ fruit }}</li>
+            </ul>
+            <p v-if="fruitsFilters.length ===0"> Aucun fruit touvé pour ce type.</p>
+        </div>
+        <salut />
+    </section>
+</template>
+
+
+
+<script>
+import salut from './components/salut.vue';
+components:{
+    salut
+}
+export default{
+    data(){
+        return{
+            Etudiant:[
+            {nom:"Rahamane", age:20},
+            {nom:"Awa", age:17},
+            {nom:"Yaya", age:18},
+            {nom:"Fatou", age:16},
+            ],
+            Fruits:{
+                rouge:["Pomme", "Fraise","Cerise"],
+                jaune:["Banane", "Mangue", "Ananas"],
+                vert: ["Kiwi", "Raisin", "Avocat"]
+            },
+            typeFruits:"rouge",
+
+        };
+    },
+    computed:{
+        etudiantMajeurs() {
+            return this.Etudiant.filter((Etudiant)=>Etudiant.age>=18);
+        },
+        fruitsFilters(){
+            return this.Fruits[this.typeFruits] || [];
+        }
+    }
+}
+</script>
+
+<style>
+h1, h2{
+    color: #2c3e50;
+}
+ul{
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    margin: 5px 0;
+}
+label{
+    margin-right: 15px;
+}
+</style>

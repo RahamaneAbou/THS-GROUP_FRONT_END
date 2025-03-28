@@ -1,0 +1,63 @@
+template>
+  <div class="stats-section">
+    <div class="stat" v-for="(stat, index) in stats" :key="index">
+      <h2 :id="'counter-' + index" class="counter">0</h2>
+      <p class="description">{{ stat.description }}</p>
+    </div>
+  </div>
+</template>
+
+
+
+<script>
+import { CountUp } from "countup.js";
+
+export default {
+  name: "StatsCounter",
+  data() {
+    return {
+      stats: [
+        { value: 1000, description: "Étudiants formés" },
+        { value: 200, description: "Projets réalisés" },
+        { value: 50, description: "Professeurs expérimentés" },
+        { value: 300, description: "Entreprises partenaires" },
+      ],
+    };
+  },
+  mounted() {
+    this.animateCounters();
+  },
+  methods: {
+    animateCounters() {
+      this.stats.forEach((stat, index) => {
+        const counter = new CountUp(`counter-${index}`, stat.value, {
+          duration: 2,
+          separator: " ", // Ajoute un espace pour les milliers
+        });
+        if (!counter.error) {
+          counter.start();
+        } else {
+          console.error(counter.error);
+        }
+      });
+    },
+  },
+};
+</script>
+
+
+
+<style scoped>
+.carousel-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.carousel-image {
+  width: 100%;
+  border-radius: 10px;
+  height: auto;
+}
+</style>

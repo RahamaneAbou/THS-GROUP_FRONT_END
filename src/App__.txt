@@ -1,0 +1,77 @@
+<template>
+   <div>
+    <img v-bind:src="imageUrl" alt="Image dynamique" />
+    <a v-bind:href="lien" target="_blank">Clique ici</a>
+      <input v-model="nom" placeholder="Entrez votre nom" />
+    <p>Votre nom est : {{ nom }}</p>
+
+    <p v-if="age >= 18">Vous êtes majeur.</p>
+    <p v-else-if="age < 18 && age > 0">Vous êtes mineur.</p>
+    <p v-else>Âge invalide.</p>
+
+    <!-- Bouton pour changer l'âge -->
+    <button @click="age = 20">Simuler 20 ans</button>
+
+    <p v-show="estVisible">Ce texte peut être masqué.</p>
+    <button @click="estVisible = !estVisible">Afficher/Masquer</button>
+
+    <ul>
+    <li v-for="(nom, index) in noms" :key="index">{{ nom }}</li>
+  </ul>
+  <!--les evenements------------------------------------------>
+  <div>
+    <button v-on:click="afficherMessage('Rahamane')">Clique ici</button>
+    <button @click="afficherMessage('Rahamane')">Clique avec raccourci</button>
+  </div>
+  <div>
+    <p>Message original : {{ message_3 }}</p>
+    <p>Message inversé : {{ messageInverse }}</p>
+  </div>
+  <div>
+    <p>--------------------------------------</p>
+    <ul>
+      <li v-for="(Etudiant_age,comp) in Etudiants_age" :key="comp"> <p v-if="comp>=18"> oui {{ Etudiant[comp] }}</p> </li>
+    </ul>
+  </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: "du text afficher pare des directive!",
+      message_2:'le seconde message',
+      imageUrl: "https://via.placeholder.com/150",
+      lien: "https://vuejs.org",
+      nom:"",
+      age:0,
+      estVisible: true,
+      message_3: "Bonjour Rahamane",
+      noms: ["Alice", "Bob", "Charlie"],
+      afficherMessage(prenom_) {
+      alert('Bonjour,' + prenom_);
+      mon_html="<div>bonjour tous le monde </div>"
+    },
+    isConnecter:""
+    };
+  },
+  computed: {
+    messageInverse() {
+      return this.message_3.split("").reverse().join('');
+    }
+  },
+  data(){
+    return{
+      Etudiants:['Mickael', 'Rahamane', ' abou-bakari', 'ramzia',' barbie','idrissou','Tariq','Lazare'],
+      Etudiants_age:[19,5,10.2, 20, 30,18, 17]
+    }
+  }
+};
+</script>
+
+<style>
+h1 {
+  color: blue;
+}
+</style>

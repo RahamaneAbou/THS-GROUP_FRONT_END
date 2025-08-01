@@ -80,17 +80,20 @@ export default {
 
         // Déterminer l'endpoint et le chemin de redirection en fonction du rôle sélectionné
         if (this.selectedRole === "etudiant") {
-          endpoint = `${this.baseURL}/etudiants/getEtudiantByNumMatricule/${this.numeMatricule}`;
+          //endpoint = `${this.baseURL}/etudiants/getEtudiantByNumMatricule/${this.numeMatricule}`;
+          endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
           redirectPath = "/etudiant";
         } else if (this.selectedRole === "enseignant") {
           endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
           redirectPath = "/admin";
         } else if(this.selectedRole === "agent_administratif"){
-          endpoint = `${this.baseURL}/personnels/matricule/${this.numeMatricule}`;
-          redirectPath = "/AgentDashboard";
+         // endpoint = `${this.baseURL}/personnels/matricule/${this.numeMatricule}`;
+          endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
+          redirectPath = "/secretaire";
         }else if(this.selectedRole === "administrateur"){
-         endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
-          redirectPath = "/Admin";
+       //  endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
+ endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
+       redirectPath = "/admin";
         }
         else {
           throw new Error("Rôle non pris en charge."); // Gérer les autres rôles

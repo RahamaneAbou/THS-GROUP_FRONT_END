@@ -1,10 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
@@ -16,7 +14,10 @@ export default defineConfig({
     },
   },
   server: {
-    host: '0.0.0.0',     
-    port: process.env.PORT || 4173,
-  }
+    host: '0.0.0.0', 
+  },
+  preview: {
+    host: '0.0.0.0', 
+    allowedHosts: ['ths-group-front-end.onrender.com'], 
+  },
 })

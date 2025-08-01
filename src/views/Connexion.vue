@@ -17,7 +17,7 @@
             <option value="agent_administratif">Agent administratif</option>
             <option value="administrateur">Administrateur</option>
           </select>
-        </div>
+        </div>axv
 
         <!-- Champ Numéro Matricule -->
         <div class="input-group">
@@ -56,7 +56,7 @@ export default {
       selectedRole: "", // Rôle sélectionné par défaut
       numeMatricule: "", // Numéro matricule de l'utilisateur
       password: "", // Mot de passe de l'utilisateur
-      baseURL: "http://localhost:8080/THS-GROUP", // URL de base de l'API
+      baseURL: "https://api-qrbus.onrender.com/qrbus", // URL de base de l'API
       etud: {}, // Objet pour stocker les données de l'utilisateur
       path_2: "" // Chemin vers la page après connexion
     };
@@ -76,7 +76,7 @@ export default {
 
       try {
         let endpoint = ""; // Variable pour stocker l'endpoint approprié
-        let redirectPath = ""; // Variable pour stocker le chemin de redirection
+        let redirectPath = ""; // Variable pour stocker le cnhemin de redirection
 
         // Déterminer l'endpoint et le chemin de redirection en fonction du rôle sélectionné
         if (this.selectedRole === "etudiant") {
@@ -84,12 +84,12 @@ export default {
           redirectPath = "/etudiant";
         } else if (this.selectedRole === "enseignant") {
           endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
-          redirectPath = "/enseignant";
+          redirectPath = "/admin";
         } else if(this.selectedRole === "agent_administratif"){
           endpoint = `${this.baseURL}/personnels/matricule/${this.numeMatricule}`;
           redirectPath = "/AgentDashboard";
         }else if(this.selectedRole === "administrateur"){
-          endpoint = `${this.baseURL}/personnels/matricule/${this.numeMatricule}`;
+         endpoint = `${this.baseURL}/enseignants/getEnseignantByNumMatricule/${this.numeMatricule}`;
           redirectPath = "/Admin";
         }
         else {

@@ -96,7 +96,7 @@ export default {
       coursList: [], // Liste des cours dans la formation sélectionnée
       selectedCours: null, // Cours sélectionné
       etudiants: [], // Liste des étudiants avec leurs notes
-      baseURL: "http://localhost:8080/THS-GROUP", // URL de base de l'API
+      baseURL: "https://api-qrbus.onrender.com/qrbus", // URL de base de l'API
     };
   },
   async created() {

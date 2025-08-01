@@ -20,12 +20,12 @@
       </div>
         </div>
         
-  <div>
-    <!-- Bouton de navigation vers la route "Inscription" -->
+  <!-- <div>
+    Bouton de navigation vers la route "Inscription" 
     <router-link to="/inscription">
       <button>Aller à l'inscription</button>
     </router-link>
-  </div>
+  </div> -->
   
         <!-- Ligne de séparation -->
         <div class="divider"></div>

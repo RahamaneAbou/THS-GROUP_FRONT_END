@@ -135,7 +135,7 @@ export default {
       currentTab: "formations", // Tab actif par défaut
       currentAction: "", // Action actuelle (étudiants confirmés, rejetés, etc.)
       isDataLoaded: false, // Indicateur de chargement global
-      baseURL: "http://localhost:8080/THS-GROUP", // URL de base de l'API
+      baseURL: "https://api-qrbus.onrender.com/qrbus", // URL de base de l'API
     };
   },
   async created() {
@@ -254,7 +254,7 @@ padding: 0;
   border:1px solid #FFFAFA;
   padding: 10px;
   margin-bottom: 5px;
-  background: ; /* Rouge moyen */
+  background: rebeccapurple; /* Rouge moyen */
   border-radius: 5px;
   transition: background-color 0.3s ease;
   font-size: 1rem;
@@ -440,7 +440,7 @@ header p {
   
 }
 .refuse-button {
-  background: ; /* Rouge plus clair au survol */
+  background: rebeccapurple; /* Rouge plus clair au survol */
  
 }
 

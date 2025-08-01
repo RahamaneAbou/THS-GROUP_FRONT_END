@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Inscription from '../views/Inscription.vue'  // Assurez-vous que ce composant existe
-import AdminDashboard from "../views/Administrateur.vue";
+import AdminDashboard from "../views/admin/Administrateur.vue";
 import Dashboard from "../components/Administrateur/Dashboard.vue"
 import UsersManagement from "../components/Administrateur/Users-Management.vue";
-
+import PageAccueil from '../views/PageAccueil.vue';
 import StudentsManagement from '../components/Administrateur/StudentsManagement.vue';
 import TeachersManagement from '../components/Administrateur/TeachersManagement.vue';
 import CoursesManagement from '../components/Administrateur/CoursesManagement.vue';
@@ -13,10 +13,14 @@ import FinancialManagement from '../components/Administrateur/FinancialManagemen
 import SystemSettings from '../components/Administrateur/SystemSettings.vue';
 import Reports from '../components/Administrateur/Reports.vue';
 import Customization from '../components/Administrateur/Customization.vue';
+
+import EtudiantDashboard from '../views/etudiant/EtudiantDashboard.vue';
+import SecretaireDashboard from '../views/secretaire/SecretaireDashboard.vue';
 import Login from '../views/Connexion.vue';
 import StudentDashboard from '../views/StudentDashboard.vue';
 import EnseignantDashboard from '../views/EnseignantDashboard.vue';
 import AgentDashboard from '../views/AgentDashboard.vue';
+import Text from '../components/text.vue';
 //import StudentsManagement from '../components/Administrateur/Students-Management.vue'; // Nouveau composant
 //import TeachersManagement from '../components/Administrateur/Teachers-Management.vue'; 
 
@@ -26,10 +30,25 @@ const routes = [
     name: 'Login',
     component: Login
   },
+    {
+    path:'/',
+    name: 'PageAccueil',
+    component: PageAccueil
+  },
   {
     path: '/inscription',
     name: 'Inscription',
     component: Inscription
+  },
+   {
+    path: '/secretaire',
+    name: 'SecretaireDashboard',
+    component: SecretaireDashboard
+  },
+  {
+    path: '/etudiant',
+    name: 'EtudiantDashboard',
+    component: EtudiantDashboard
   },
   {
     path: "/admin",

@@ -12,11 +12,9 @@
         </div>
        
         <div class="coter_droit">
-            <span id="a_b">T <br>H</span><br><span id="o_u">S <br>-</span><br><span id="t">G</span><br><span id="b_a">R <br> O</span><br> <span id="k_a">U<br>P</span> <span id="r_i">.</span>
+            <span id="a_b">S<br>C</span><br><span id="o_u">H</span><br><span id="t">O</span><br><span id="b_a">O<br> L</span><br> <span id="k_a">-<br>D</span>e<span id="r_i">mo</span>
         </div>
-        <div class="test">
-            yo
-        </div>
+        
     </div>
     
 </template>
@@ -125,7 +123,7 @@ export default{
     font-size:60px;
     
     font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
-    margin-left:1200px;
+    margin-left:1000px;
    
 }
 .test{

@@ -2,7 +2,7 @@
   <div>
     <div class="background">
       <div class="circle-container">
-        <p>THS-GROUP</p>
+        <p>SCHOOL-Demo</p>
         <div class="orbit">
           <div
             v-for="(item, index) in orbitItems"

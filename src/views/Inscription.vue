@@ -149,7 +149,7 @@ export default {
       formations: [],
       isLoading: false,
       error: null,
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP'
     };
   },
   computed: {

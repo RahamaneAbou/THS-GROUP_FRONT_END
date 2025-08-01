@@ -56,7 +56,7 @@ export default {
       selectedRole: "", // Rôle sélectionné par défaut
       numeMatricule: "", // Numéro matricule de l'utilisateur
       password: "", // Mot de passe de l'utilisateur
-      baseURL: "https://ths-group-api.onrender.com", // URL de base de l'API
+      baseURL: "https://ths-group-api.onrender.com/THS-GROUP", // URL de base de l'API
       etud: {}, // Objet pour stocker les données de l'utilisateur
       path_2: "" // Chemin vers la page après connexion
     };

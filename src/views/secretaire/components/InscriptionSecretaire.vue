@@ -169,7 +169,7 @@ export default {
       filtreStatut: 'tous',
       modalDetailsOuverte: false,
       inscriptionSelectionnee: null,
-      baseURL: 'https://ths-group-api.onrender.com'
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP'
     }
   },
   computed: {

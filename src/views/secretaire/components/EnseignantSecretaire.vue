@@ -167,7 +167,7 @@ export default {
       modalCoursOuverte: false,
       enseignantSelectionne: null,
       coursEnseignant: [],
-      baseURL: 'https://ths-group-api.onrender.com'
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP'
     }
   },
   computed: {

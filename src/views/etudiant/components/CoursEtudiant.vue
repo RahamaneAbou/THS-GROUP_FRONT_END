@@ -129,7 +129,7 @@ export default {
       modalDetailsOuverte: false,
       coursSelectionne: null,
       notesCours: [],
-      baseURL: 'https://ths-group-api.onrender.com'
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP'
     }
   },
   methods: {

@@ -87,7 +87,7 @@ export default {
       selectedFormation: null, // Formation actuellement sélectionnée
       selectedCourse: null, // Cours actuellement sélectionné
       isDataLoaded: false, // Indicateur de chargement des données
-      baseURL: "https://ths-group-api.onrender.com", // URL de base de l'API
+      baseURL: "https://ths-group-api.onrender.com/THS-GROUP", // URL de base de l'API
     };
   },
   async created() {

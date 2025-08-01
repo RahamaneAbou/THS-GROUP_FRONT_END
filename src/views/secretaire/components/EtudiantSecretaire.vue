@@ -206,7 +206,7 @@ export default {
       etudiantSelectionne: null,
       coursEtudiant: [],
       notesEtudiant: [],
-      baseURL: 'https://ths-group-api.onrender.com'
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP'
     }
   },
   computed: {

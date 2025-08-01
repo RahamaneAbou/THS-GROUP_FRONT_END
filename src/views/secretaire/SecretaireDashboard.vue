@@ -143,7 +143,7 @@ export default {
     return {
       pageActive: 'accueil',
       nomSecretaire: 'Secrétaire',
-      baseURL: 'https://ths-group-api.onrender.com',
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP',
       // Statistiques
       inscriptionsEnAttente: 0,
       inscriptionsConfirmees: 0,

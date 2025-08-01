@@ -96,7 +96,7 @@ export default {
       coursList: [], // Liste des cours dans la formation sélectionnée
       selectedCours: null, // Cours sélectionné
       etudiants: [], // Liste des étudiants avec leurs notes
-      baseURL: "https://ths-group-api.onrender.com", // URL de base de l'API
+      baseURL: "https://ths-group-api.onrender.com/THS-GROUP", // URL de base de l'API
     };
   },
   async created() {

@@ -234,7 +234,7 @@ export default {
       formationSelectionnee: null,
       etudiantsFormation: [],
       coursFormation: [],
-      baseURL: 'https://ths-group-api.onrender.com'
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP'
     }
   },
   computed: {

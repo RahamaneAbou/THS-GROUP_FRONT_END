@@ -121,7 +121,7 @@ export default {
       courses: [],
       notes: [],
       isDataLoaded: false,
-      baseURL: 'https://ths-group-api.onrender.com'
+      baseURL: 'https://ths-group-api.onrender.com/THS-GROUP'
     }
   },
   computed: {

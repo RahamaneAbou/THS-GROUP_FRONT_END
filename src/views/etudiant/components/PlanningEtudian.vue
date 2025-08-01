@@ -93,7 +93,7 @@ export default {
         '14:00 - 15:30',
         '15:45 - 17:15'
       ],
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com'
     }
   },
   computed: {

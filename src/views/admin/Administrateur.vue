@@ -120,7 +120,7 @@ export default {
     return {
       pageActive: 'accueil',
       nomAdmin: 'Administrateur',
-      baseURL: 'https://api-qrbus.onrender.com/qrbus',
+      baseURL: 'https://ths-group-api.onrender.com',
       // Statistiques
       totalEtudiants: 0,
       totalEnseignants: 0,

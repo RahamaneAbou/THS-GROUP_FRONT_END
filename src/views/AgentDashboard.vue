@@ -135,7 +135,7 @@ export default {
       currentTab: "formations", // Tab actif par défaut
       currentAction: "", // Action actuelle (étudiants confirmés, rejetés, etc.)
       isDataLoaded: false, // Indicateur de chargement global
-      baseURL: "https://api-qrbus.onrender.com/qrbus", // URL de base de l'API
+      baseURL: "https://ths-group-api.onrender.com", // URL de base de l'API
     };
   },
   async created() {

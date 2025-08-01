@@ -169,7 +169,7 @@ export default {
       filtreStatut: 'tous',
       modalDetailsOuverte: false,
       inscriptionSelectionnee: null,
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com'
     }
   },
   computed: {

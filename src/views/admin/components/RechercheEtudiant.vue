@@ -195,7 +195,7 @@ export default {
       modalDetailsOuverte: false,
       etudiantSelectionne: null,
       notesEtudiant: [],
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com'
     }
   },
   methods: {

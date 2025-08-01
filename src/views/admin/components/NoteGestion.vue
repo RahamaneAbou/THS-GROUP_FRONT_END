@@ -139,7 +139,7 @@ export default {
       filtreCours: '',
       modalOuverte: false,
       modeEdition: false,
-      baseURL: 'https://api-qrbus.onrender.com/qrbus',
+      baseURL: 'https://ths-group-api.onrender.com',
       coursFormation: [],
       etudiantsFormation: [],
       noteForm: {

@@ -206,7 +206,7 @@ export default {
       etudiantSelectionne: null,
       coursEtudiant: [],
       notesEtudiant: [],
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com'
     }
   },
   computed: {

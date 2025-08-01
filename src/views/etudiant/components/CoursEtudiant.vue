@@ -129,7 +129,7 @@ export default {
       modalDetailsOuverte: false,
       coursSelectionne: null,
       notesCours: [],
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com'
     }
   },
   methods: {

@@ -125,7 +125,7 @@ export default {
       inscriptions: [],
       filtreStatut: 'tous',
       chargementEnCours: true,
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com'
     }
   },
   computed: {

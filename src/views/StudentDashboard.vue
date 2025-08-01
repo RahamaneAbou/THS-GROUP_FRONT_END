@@ -74,7 +74,7 @@ export default {
       notes: [], // Liste des notes de l'étudiant
       selectedCourse: null, // Cours actuellement sélectionné
       isDataLoaded: false, // Indicateur de chargement des données
-      baseURL: "https://api-qrbus.onrender.com/qrbus", // URL de base de l'API
+      baseURL: "https://ths-group-api.onrender.com", // URL de base de l'API
     };
   },
   async created() {

@@ -121,7 +121,7 @@ export default {
       courses: [],
       notes: [],
       isDataLoaded: false,
-      baseURL: 'https://api-qrbus.onrender.com/qrbus'
+      baseURL: 'https://ths-group-api.onrender.com'
     }
   },
   computed: {

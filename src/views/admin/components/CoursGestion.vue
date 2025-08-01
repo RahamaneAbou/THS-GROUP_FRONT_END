@@ -157,7 +157,7 @@ export default {
       modeEdition: false,
       coursSelectionne: null,
       etudiantsCours: [],
-      baseURL: 'http://localhost:8080/THS-GROUP',
+      baseURL: 'https://ths-group-api.onrender.com',
       coursForm: {
         nom: '',
         description: '',
